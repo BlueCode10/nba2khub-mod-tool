@@ -1,0 +1,6 @@
+build/
+*.tmp
+*.obj
+*.pdb
+Thumbs.db
+desktop.ini
