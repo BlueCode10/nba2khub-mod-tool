@@ -118,7 +118,13 @@ def encode_alpha(al):
 
 
 def encode(fmt, rgba):
-    """rgba: (h, w, 4) uint8/float array -> raw block bytes (standard order)."""
+    """rgba: (h, w, 4) uint8/float array -> raw block bytes (standard order).
+    For ARGB (D3D A8R8G8B8) the output is uncompressed pixels in B,G,R,A byte order."""
+    if fmt == 'ARGB':
+        a = np.clip(np.round(np.asarray(rgba, np.float64)), 0, 255).astype(np.uint8)
+        if a.shape[2] == 3:
+            a = np.concatenate([a, np.full(a.shape[:2] + (1,), 255, np.uint8)], 2)
+        return a[..., [2, 1, 0, 3]].tobytes()      # RGBA -> BGRA
     a = np.asarray(rgba, np.float64)
     B = _blocks(a)
     col = encode_colour(B[:, :, :3])

@@ -4,3 +4,7 @@ build/
 *.pdb
 Thumbs.db
 desktop.ini
+
+# PyInstaller runtime build output
+runtime-src/dist/
+runtime-src/*.spec
