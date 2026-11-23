@@ -55,13 +55,15 @@ def positions(f):
         raise ValueError('no textures found')
     pos = {}
     if is_free(f):
-        # no VRAM block table (RED MC style, see free_layout): each texture is one standard mip chain at its o1
-        for t in texs:
+        # no VRAM block table (RED MC style, see free_layout): each texture is one standard mip chain at its o1.
+        # Some real files (game / RED MC saves) store a slightly truncated tail for the last texture, so the full
+        # chain down to 1x1 would run a few bytes past the chunk; map only the levels that actually fit (bounded by
+        # the next texture's offset, or the chunk end) rather than assuming a complete chain.
+        for idx, t in enumerate(texs):
+            boundary = texs[idx + 1]['o1'] if idx + 1 < len(texs) else len(f.chunks[1])
             off = t['o1']; d = t['w']
-            while d >= 1:
+            while d >= 1 and off + level_size(t['fmt'], d) <= boundary:
                 pos[(t['name'], d)] = off; off += level_size(t['fmt'], d); d //= 2
-            if off > len(f.chunks[1]):
-                raise ValueError('texture %s runs past the end of the chunk' % t['name'])
         return pos
     off = texs[0]['o1']
     for t in texs:
@@ -230,7 +232,9 @@ def free_layout(f, sizes):
         d = w
         while d >= 1:
             n = level_size(t['fmt'], d)
-            body += old[(t['name'], d)] if w == t['w'] else bytes(n)
+            # unchanged textures keep their pixels; a truncated tail level the source omitted is zero-filled so the
+            # rebuilt chain is complete. resized textures are zeroed (written afterwards).
+            body += old.get((t['name'], d), bytes(n)) if w == t['w'] else bytes(n)
             d //= 2
     f.chunks[1][:] = body
     # header: chunk1 record type 5 + [5, count, entries] -> type 6 + [0]
