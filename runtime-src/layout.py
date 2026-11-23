@@ -199,7 +199,12 @@ def _c1_rec(f):
 
 
 def is_free(f):
-    return struct.unpack_from('<I', f.d, _c1_rec(f) + 16)[0] == 6
+    # Genuine block-table-free (RED MC / free_layout output): chunk1 record type 6 with NO VRAM block table after
+    # it. Some "unlock" tools flip the type 5 -> 6 but leave the table in place (its inner type marker 5 sits at
+    # r+28, where a genuine free record has 0); those files are still physically in stock packed order, so they are
+    # NOT free and must be read with the stock layout.
+    r = _c1_rec(f)
+    return struct.unpack_from('<I', f.d, r + 16)[0] == 6 and struct.unpack_from('<I', f.d, r + 28)[0] != 5
 
 
 def free_layout(f, sizes):
@@ -237,9 +242,10 @@ def free_layout(f, sizes):
             body += old.get((t['name'], d), bytes(n)) if w == t['w'] else bytes(n)
             d //= 2
     f.chunks[1][:] = body
-    # header: chunk1 record type 5 + [5, count, entries] -> type 6 + [0]
+    # header: chunk1 record type 5 + [5, count, entries] -> type 6 + [0]. Also covers "unlock" files that already
+    # read as type 6 but still carry the block table (inner marker 5 at r+28); drop it so the result is genuinely free.
     r = _c1_rec(f)
-    if struct.unpack_from('<I', f.d, r + 16)[0] == 5:
+    if struct.unpack_from('<I', f.d, r + 28)[0] == 5:
         count = struct.unpack_from('<I', f.d, r + 32)[0]
         cut0, cut1 = r + 32, r + 36 + 8 * count
         struct.pack_into('<I', f.d, r + 16, 6); struct.pack_into('<I', f.d, r + 28, 0)
