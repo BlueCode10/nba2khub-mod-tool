@@ -213,7 +213,7 @@ namespace ModToolEN
             var t = Theme.Cur;
             using (var dlg = new Form())
             {
-                dlg.Text = "NBA2KHUB Mod Tool v1.0.1.0";
+                dlg.Text = "NBA2KHUB Mod Tool v1.0.2.0";
                 dlg.FormBorderStyle = FormBorderStyle.FixedDialog;
                 dlg.StartPosition = FormStartPosition.CenterParent;
                 dlg.MaximizeBox = dlg.MinimizeBox = false; dlg.ShowInTaskbar = false;
@@ -226,7 +226,7 @@ namespace ModToolEN
                     dlg.Controls.Add(new PictureBox { Image = logo, SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.Transparent, Bounds = new Rectangle(UI.D(22), UI.D(22), UI.D(60), UI.D(60)) });
                 int x = UI.D(98);
                 dlg.Controls.Add(new Label { Text = "NBA2KHUB Mod Tool", Font = UI.Head(13.5f), ForeColor = t.Text, AutoSize = true, BackColor = Color.Transparent, Location = new Point(x, UI.D(26)) });
-                dlg.Controls.Add(new Label { Text = "Version 1.0.1.0", Font = UI.Font(9f), ForeColor = t.Muted, AutoSize = true, BackColor = Color.Transparent, Location = new Point(x, UI.D(52)) });
+                dlg.Controls.Add(new Label { Text = "Version 1.0.2.0", Font = UI.Font(9f), ForeColor = t.Muted, AutoSize = true, BackColor = Color.Transparent, Location = new Point(x, UI.D(52)) });
                 var git = new LinkLabel { Text = "github.com/BlueCode10", AutoSize = true, BackColor = Color.Transparent, Font = UI.Font(9.5f, FontStyle.Bold), LinkColor = t.Accent2, ActiveLinkColor = t.Accent, Location = new Point(x, UI.D(78)) };
                 git.LinkClicked += (s, e) => { try { System.Diagnostics.Process.Start(GitHubUrl); } catch { } };
                 dlg.Controls.Add(git);
@@ -454,7 +454,7 @@ namespace ModToolEN
 
         // ---------- translation of the original UI ----------
 
-        public const string AppTitle = "NBA2KHUB Mod Tool v1.0.1";
+        public const string AppTitle = "NBA2KHUB Mod Tool v1.0.2";
         void Retitle()
         {
             if (f.Text != AppTitle) f.Text = AppTitle;
@@ -579,7 +579,7 @@ namespace ModToolEN
 
             var badgeRow = new Box { Stack = true, Horizontal = true, AutoHeight = true, Gap = UI.D(8) };
             var badge = new Badge("IFF EDITOR");
-            var ver = new Badge("v1.0.1") { ColorFn = t => t.Muted };
+            var ver = new Badge("v1.0.2") { ColorFn = t => t.Muted };
             AddAll(badgeRow, badge, ver);
             var toggle = new Box { Stack = true, Horizontal = true, AutoHeight = true, Gap = UI.D(4), Radius = UI.D(8),
                 FillFn = t => t.Field, BorderFn = t => t.Line, Padding = new Padding(UI.D(4)) };

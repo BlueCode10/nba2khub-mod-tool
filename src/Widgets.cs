@@ -453,7 +453,7 @@ namespace ModToolEN
             using (var f1 = UI.Head(11.5f))
                 TextRenderer.DrawText(g, "NBA2KHUB", f1, new Point(x, y + UI.D(2)), t.Text, TextFormatFlags.NoPadding);
             using (var f2 = UI.Font(7f, FontStyle.Bold))
-                TextRenderer.DrawText(g, "MOD TOOL  ·  v1.0.1", f2, new Point(x + UI.D(1), y + UI.D(24)), t.Muted, TextFormatFlags.NoPadding);
+                TextRenderer.DrawText(g, "MOD TOOL  ·  v1.0.2", f2, new Point(x + UI.D(1), y + UI.D(24)), t.Muted, TextFormatFlags.NoPadding);
         }
     }
 
